@@ -18,6 +18,22 @@
 
 		}
 
+		public static function  checkList($list)
+		{
+
+          foreach ($list as &$row) {
+              
+            $p = new Product();
+            $p->setData($row);
+            $row = $p->getValues();
+
+          }
+
+          return $list;
+
+
+		}
+
 		public function save(){
 
 		  $sql = new Sql();
@@ -82,7 +98,6 @@
              $url =  "/res/site/img/products/product.jpg";
 
            }
-
            return $this->setdesphoto($url);
 
        }
@@ -104,7 +119,6 @@
 		{
           $extension = explode('.', $file['name']);
           $extension = end($extension);
-
           switch ($extension) {
           	case 'jpg':
           	case 'jpeg':
@@ -117,14 +131,13 @@
           		$image = imagecreatefrompng($file["tmp_name"]);
           		break;
           }
-
           $dist = 	$_SERVER['DOCUMENT_ROOT']. DIRECTORY_SEPARATOR .
            	"res"  . DIRECTORY_SEPARATOR .
            	"site" . DIRECTORY_SEPARATOR .
            	"img"  . DIRECTORY_SEPARATOR .
            	"products"  . DIRECTORY_SEPARATOR . 
            	$this->getidproduct(). ".jpg";
-
+         
           imagejpeg($image, $dist) ;
 
           imagedestroy($image);
