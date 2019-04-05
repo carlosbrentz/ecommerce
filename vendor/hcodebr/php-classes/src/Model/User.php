@@ -94,7 +94,7 @@ public static function verifyLogin($inadmin = true)
 
 {
 
-	if (User::checkLogin($indamin)){
+	if (User::checkLogin($inadmin)){
 
 		header("Location: /admin/login");
 		exit;
@@ -182,7 +182,6 @@ public function delete()
      $sql = new Sql();
 
      $results = $sql->select("select * from tb_persons a inner join tb_users b using (idperson) where a.desemail = :email", array (":email"=>$email));
-
      if (count($results) === 0)
      {
        throw new \Exception("Não foi possível recuperar a senha.");
@@ -203,17 +202,19 @@ public function delete()
          $iv = random_bytes(openssl_cipher_iv_length('aes-256-cbc'));
          $code = openssl_encrypt($dataRecovery['idrecovery'], 'aes-256-cbc', User::SECRET, 0, $iv);
          $result = base64_encode($iv.$code);
+
          if ($inadmin === true) {
                 $link = "http://www.hcodecommerce.com.br/admin/forgot/reset?code=$result";
-             } else {
+         } else {
                  $link = "http://www.hcodecommerce.com.br/forgot/reset?code=$result";
-             } 
-             $mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Hcode Store", "forgot", array(
+          } 
+          $mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Hcode Store", "forgot", array(
                  "name"=>$data["desperson"],
                  "link"=>$link
-             )); 
-             $mailer->send();
-             return $link;
+          )); 
+          $mailer->send();
+          exit;
+          return $link;
        }
      }
 }

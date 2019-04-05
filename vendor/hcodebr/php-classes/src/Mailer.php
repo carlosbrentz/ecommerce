@@ -26,8 +26,8 @@
         foreach ($data as $key => $value) {
         	$tpl->assign($key, $value);
         }
-        $html = $tpl->draw($tplName,false); //trocar para true para enviar
-exit;
+        $html = $tpl->draw($tplName,true); //trocar para true para enviar
+
 		//Create a new PHP$this->mailer instance
 		$this->mail = new \PHPMailer;
 		//Tell PHP$this->mailer to use SMTP
