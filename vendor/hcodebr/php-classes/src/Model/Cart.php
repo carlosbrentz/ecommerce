@@ -220,12 +220,18 @@
              'nVlValorDeclarado'=>$totals['vlprice'],
              'sCdAvisoRecebimento'=>'S'
         ]);
-        // $context = stream_context_get_default();
-        // stream_context_set_option($context, 'http', 'proxy', 'tcp://10.0.194.8:8080');
-
-        $xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
-       
-       $result = $xml->Servicos->cServico;
+        $link = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs;
+        $proxy = "proxycor:8080";
+        $ch = curl_init($link);
+        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER , 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode($response, true);
+        $xml = simplexml_load_string($response);
+        var_dump($xml) ;  
+        $result = $xml->Servicos->cServico;
 
        if ($result->MsgErro != '') {
 

@@ -9,6 +9,10 @@ $app->get("/admin/users",function() {
 
   $users = User::listAll();
 
+  foreach ($users as &$row)
+  {
+     $row['desperson'] = utf8_encode($row['desperson']);
+  }  
   $page = new PageAdmin();
 
   $page->setTpl("users", array(
@@ -32,7 +36,7 @@ $app->get("/admin/users/:iduser/delete", function($iduser){
 
   User::verifyLogin();
 
-  $user =new User();
+  $user = new User();
 
   $user->get((int)$iduser);
 
@@ -70,10 +74,10 @@ $app->post("/admin/users/create", function(){
 
   $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
 
-  $_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+  /*$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
 
  		"cost"=>12
-  ]); 		
+  ]); 		*/
 
   $user->setData($_POST);
 
