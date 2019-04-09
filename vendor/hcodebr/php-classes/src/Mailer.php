@@ -3,6 +3,7 @@
  namespace Hcode;
 
  use Rain\Tpl;
+ use \PHPMailer;
 
  Class Mailer {
 
@@ -19,14 +20,13 @@
 	            "cache_dir"     => $_SERVER["DOCUMENT_ROOT"]."/views-cache/",
 	            "debug"         => false
 		    );
-
         Tpl::configure( $config );
 
         $tpl = new Tpl;
         foreach ($data as $key => $value) {
         	$tpl->assign($key, $value);
         }
-        $html = $tpl->draw($tplName,true); //trocar para true para enviar
+        $html = $tpl->draw($tplName,true); //true para enviar false para mostrar na tela sem enviar
 
 		//Create a new PHP$this->mailer instance
 		$this->mail = new \PHPMailer;
@@ -46,7 +46,7 @@
 		// 2 = client and server messages
 		$this->mail->SMTPDebug = 3;
 		//Set the hostname of the $this->mail server
-		$this->mail->Host = 'smtp.mail.com';
+		$this->mail->Host = 'smtp.gmail.com';
 		// use
 		// $this->mail->Host = gethostbyname('smtp.g$this->mail.com');
 		// if your network does not support SMTP over IPv6
