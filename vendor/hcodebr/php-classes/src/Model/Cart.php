@@ -230,7 +230,6 @@
         curl_close($ch);
         $data = json_decode($response, true);
         $xml = simplexml_load_string($response);
-        var_dump($xml) ;  
         $result = $xml->Servicos->cServico;
 
        if ($result->MsgErro != '') {
