@@ -306,12 +306,11 @@
       {
 
         $this->updateFreight(); 
-
+       
         $totals = $this->getProductsTotals(); 
       
         $this->setvlsubtotal($totals['vlprice']);
         $this->setvltotal($totals['vlprice'] + $this->getvlfreight());
-
       }
 
       public function checkZipCode()
