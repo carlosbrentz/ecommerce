@@ -67,13 +67,15 @@ public static function checkLogin($inadmin = true)
    $results = $sql->select("select *  from tb_users u inner join tb_persons p  on u.idperson = p.idperson
      where u.deslogin = :LOGIN", array(":LOGIN"=>$login));
 
+  
+
    if (count($results) ===0)
    {
    	  throw new \Exception("Usuário inexistente ou senha inválida");
    }
 
    $data = $results[0];
-
+ //var_dump($password);exit;
    if (password_verify($password, $data["despassword"]) === true)
    {
    	  $user = new User();
