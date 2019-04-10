@@ -410,7 +410,7 @@ public static function getPassworHash($password)
 
         return $results;
 }
-public static function getPage($search = '', $page = 1, $itensPerPage = 3)
+public static function getPage($search = '', $page = 1, $itensPerPage = 10)
         {
 
 
