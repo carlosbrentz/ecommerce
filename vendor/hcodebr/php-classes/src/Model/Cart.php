@@ -327,7 +327,7 @@
       }
 
 
-  public function removeSession()
+  public function removeFromSession()
   {
        $_SESSION[Cart::SESSION] = NULL;
        session_regenerate_id();
