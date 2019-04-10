@@ -410,6 +410,44 @@ public static function getPassworHash($password)
 
         return $results;
 }
+public static function getPage($search = '', $page = 1, $itensPerPage = 3)
+        {
+
+
+               $start = ($page - 1) * $itensPerPage;
+
+               $sql = new Sql();
+               if ($search === '') {
+
+                  $results = $sql->select("
+                   select SQL_CALC_FOUND_ROWS *
+                   from tb_users a 
+                   inner join tb_persons b using(idperson)
+                   order by b.desperson
+                   limit $start, $itensPerPage;");
+
+               }else{
+                 $results = $sql->select("
+                   select SQL_CALC_FOUND_ROWS *
+                   from tb_users a 
+                   inner join tb_persons b using(idperson)
+                   where b.desperson like :search or  b.desemail = :search1 or a.deslogin like :search2
+                   order by b.desperson
+                   limit $start, $itensPerPage;",[
+                     'search'=>'%'.$search.'%' ,
+                     'search1'=>$search,   
+                     'search2'=>'%'.$search.'%' 
+                   ]);
+               }  
+
+                $resultTotal = $sql->select("select FOUND_ROWS() as nrtotal;");
+              
+                return [
+                  'data'=>$results,
+                  'total'=>(int)$resultTotal[0]["nrtotal"],
+                  'pages'=>ceil($resultTotal[0]["nrtotal"] / $itensPerPage)
+                ];
+        }
 
 
 }
