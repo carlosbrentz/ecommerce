@@ -244,7 +244,7 @@ $app->post("/checkout", function(){
 
      Cart::setmsgError("Informe  o Pais.");
 
-     header('Location: /cehcout');
+     header('Location: /checkout');
      exit;
   }
 
@@ -435,7 +435,7 @@ $app->post("/forgot/reset", function(){
 
     $user->get((int)$forgot["iduser"]);
 
-      $password = password_hash($_POST['password'], PASSWORD_DEFAULT, [
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT, [
               "cost"=>12]);
 
     $user->setPassword($password);
