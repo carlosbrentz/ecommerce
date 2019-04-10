@@ -168,6 +168,42 @@
 
 			]);
 		}
+   public static function getPage($search = '', $page = 1, $itensPerPage = 10)
+        {
+
+
+               $start = ($page - 1) * $itensPerPage;
+
+               $sql = new Sql();
+               if ($search === '') {
+
+                  $results = $sql->select("
+                   select SQL_CALC_FOUND_ROWS *
+                   from tb_products order by desproduct
+                   limit $start, $itensPerPage;");
+
+               }else{
+                 $results = $sql->select("
+                   select SQL_CALC_FOUND_ROWS *
+                   from tb_products 
+                   where desproduct like :search
+                   order by desproduct
+                   limit $start, $itensPerPage;",[
+                     'search'=>'%'.$search.'%' 
+                     
+                   ]);
+               }  
+
+                $resultTotal = $sql->select("select FOUND_ROWS() as nrtotal;");
+              
+                return [
+                  'data'=>$results,
+                  'total'=>(int)$resultTotal[0]["nrtotal"],
+                  'pages'=>ceil($resultTotal[0]["nrtotal"] / $itensPerPage)
+                ];
+        }
+
+
 	 }
 
  ?>
