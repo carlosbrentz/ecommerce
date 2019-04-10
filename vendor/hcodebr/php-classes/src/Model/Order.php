@@ -149,6 +149,51 @@ class Order extends Model {
 
     }
 
+   public static function getPage($search = '', $page = 1, $itensPerPage = 10)
+        {
+
+
+               $start = ($page - 1) * $itensPerPage;
+
+               $sql = new Sql();
+               if ($search === '') {
+
+                  $results = $sql->select("
+                   select SQL_CALC_FOUND_ROWS *
+                    FROM tb_orders a 
+                    INNER JOIN tb_ordersstatus b USING(idstatus)
+                    INNER JOIN tb_carts c USING(idcart)
+                    INNER JOIN tb_users d ON d.iduser = a.iduser
+                    INNER JOIN tb_addresses e USING(idaddress)
+                    INNER JOIN tb_persons f ON f.idperson = d.idperson
+                    ORDER BY a.dtregister DESC
+                    limit $start, $itensPerPage;");
+
+               }else{
+                 $results = $sql->select("
+                  select SQL_CALC_FOUND_ROWS *
+                    FROM tb_orders a 
+                    INNER JOIN tb_ordersstatus b USING(idstatus)
+                    INNER JOIN tb_carts c USING(idcart)
+                    INNER JOIN tb_users d ON d.iduser = a.iduser
+                    INNER JOIN tb_addresses e USING(idaddress)
+                    INNER JOIN tb_persons f ON f.idperson = d.idperson
+                    where a.idorder = :id or f.desperson like :search
+                    ORDER BY a.dtregister DESC
+                    limit $start, $itensPerPage;",[
+                     'search'=>'%'.$search.'%', 
+                     'id'=>$search                    
+                   ]);
+               }  
+
+                $resultTotal = $sql->select("select FOUND_ROWS() as nrtotal;");
+              
+                return [
+                  'data'=>$results,
+                  'total'=>(int)$resultTotal[0]["nrtotal"],
+                  'pages'=>ceil($resultTotal[0]["nrtotal"] / $itensPerPage)
+                ];
+        }
 
 
 

@@ -168,6 +168,7 @@
 
 			]);
 		}
+		
    public static function getPage($search = '', $page = 1, $itensPerPage = 10)
         {
 
