@@ -182,6 +182,7 @@ $app->get("/checkout", function(){
    }
 
    if (!$address->getdesaddress()) $address->setdesaddress('');
+   if (!$address->getdesnumber()) $address->setdesnumber('');
    if (!$address->getdescity()) $address->setdescity('');
    if (!$address->getdesstate()) $address->setdesstate('');
    if (!$address->getdesdistrict()) $address->setdesdistrict('');
@@ -556,8 +557,8 @@ $app->get("/boleto/:idorder", function($idorder){
 
     // DADOS DO SEU CLIENTE
     $dadosboleto["sacado"] = utf8_decode($order->getdesperson());
-    $dadosboleto["endereco1"] = utf8_decode($order->getdesaddress()). " " . utf8_decode($order->getdesdistrict());
-    $dadosboleto["endereco2"] = utf8_decode($order->getdescity()).  " - " . utf8_decode($order->getdestate()) ." - ". utf8_decode($order->getdescountry()) . " - CEP: " . $order->getdeszipcode();
+    $dadosboleto["endereco1"] =$order->getdesaddress(). " " . $order->getdesnumber() . " ". $order->getdesdistrict();
+    $dadosboleto["endereco2"] = $order->getdescity().  " - " . $order->getdestate() ." - ". $order->getdescountry() . " - CEP: " . $order->getdeszipcode();
 
     // INFORMACOES PARA O CLIENTE
     $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Hcode E-commerce";
