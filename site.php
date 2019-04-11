@@ -280,7 +280,18 @@ $app->post("/checkout", function(){
 
   $order->save(); 
 
-  header("Location: /order/".$order->getidorder()."/pagseguro");
+  switch ((int)$_POST['payment-method']) {
+ 
+    case 1:
+      header("Location: /order/".$order->getidorder()."/pagseguro");
+      break;
+    case 2:  
+      header("Location: /order/".$order->getidorder()."/paypal");
+      break;
+    default:  
+      header("Location: /order/".$order->getidorder());
+
+  }
 
   exit;
 
@@ -314,12 +325,31 @@ $app->get("/order/:idorder/pagseguro", function($idorder){
           ]
     ]);
 
-
- 
-
-
 });
 
+$app->get("/order/:idorder/paypal", function($idorder){
+
+    User::verifyLogin(false);
+
+    $order = new Order();
+
+    $order->get((int)$idorder);
+
+    $cart = $order->getCart();
+
+    $page = new Page([
+      'header'=>false,
+      'footer'=>false
+    ]);
+
+
+    $page->setTpl("payment-paypal",[
+          'order'=>$order->getValues(),
+          'cart'=>$cart->getValues(),
+          'products'=>$cart->getProducts()
+    ]);
+
+});
 
 $app->get("/login", function(){
 
@@ -589,9 +619,9 @@ $app->get("/boleto/:idorder", function($idorder){
     $dadosboleto["valor_boleto"] = $valor_boleto;   // Valor do Boleto - REGRA: Com vírgula e sempre com duas casas depois da virgula
 
     // DADOS DO SEU CLIENTE
-    $dadosboleto["sacado"] = utf8_decode($order->getdesperson());
-    $dadosboleto["endereco1"] =$order->getdesaddress(). " " . $order->getdesnumber() . " ". $order->getdesdistrict();
-    $dadosboleto["endereco2"] = $order->getdescity().  " - " . $order->getdestate() ." - ". $order->getdescountry() . " - CEP: " . $order->getdeszipcode();
+    $dadosboleto["sacado"] = utf8_encode($order->getdesperson());
+    $dadosboleto["endereco1"] =utf8_encode($order->getdesaddress()). " " . $order->getdesnumber() . " ". utf8_encode($order->getdesdistrict());
+    $dadosboleto["endereco2"] = utf8_encode($order->getdescity()).  " - " . utf8_encode($order->getdestate()) ." - ". $order->getdescountry() . " - CEP: " . $order->getdeszipcode();
 
     // INFORMACOES PARA O CLIENTE
     $dadosboleto["demonstrativo1"] = "Pagamento de Compra na Loja Hcode E-commerce";
