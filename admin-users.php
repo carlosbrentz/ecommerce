@@ -166,7 +166,7 @@ $app->post("/admin/users/create", function(){
   
 
 
-  foreach ( $_POST as $chave => $valor ) {
+  /*foreach ( $_POST as $chave => $valor ) {
 
     $chave = trim( strip_tags( $valor ) );
 
@@ -175,7 +175,7 @@ $app->post("/admin/users/create", function(){
          header('Location: /admin/users/create');
          exit;
     }
-  }
+  }*/
 
 
   if (!isset($_POST['desperson']) || $_POST['desperson'] === ''){
@@ -234,17 +234,6 @@ $app->post("/admin/users/:iduser", function($iduser){
 
   $user->get((int)$iduser);
 
-  foreach ( $_POST as $chave => $valor ) {
-
-    $chave = trim( strip_tags( $valor ) );
- 
-    if ( empty ( $chave ) ) {
-
-         User::setError("Preencha todos os campos.");
-         header('Location: /admin/users/'.$iduser);
-         exit;
-    }
-  }
 
  if ($file['error'] !== 4){ 
           if ($file["error"]) {

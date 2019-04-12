@@ -35,7 +35,7 @@
         <?php } ?>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" action="/admin/users/create" method="post" enctype = "multipart/form-data">
+        <form role="form"  name="cadastrar_usuario" action="/admin/users/create" method="post" enctype = "multipart/form-data">
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
@@ -69,8 +69,29 @@
           </div>
           <!-- /.box-body -->
           <div class="box-footer">
-            <button type="submit" class="btn btn-success">Cadastrar</button>
+            <button type="button" onclick="checkFields();" class="btn btn-success" value="GRAVAR" >GRAVAR</button>
           </div>
+          <script>
+                function checkFields(){
+                  if (document.getElementById("desperson").value.trim()=='')  {
+                      alert('Preencha o nome do usuário');
+                      return false;
+                  }
+                  if (document.getElementById("deslogin").value.trim()=='')  {
+                      alert('Preencha o login do usuário');
+                      return false;
+                  }
+                  if (document.getElementById("desemail").value.trim()=='')  {
+                      alert('Preencha o e-mail do usuário');
+                      return false;
+                  }
+                  if (document.getElementById("despassword").value.trim()=='')  {
+                      alert('Preencha a password do usuário');
+                      return false;
+                  }
+                  document.cadastrar_usuario.submit();
+                }
+          </script>  
         </form>
       </div>
   	</div>

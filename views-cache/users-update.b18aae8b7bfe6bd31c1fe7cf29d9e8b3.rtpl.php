@@ -24,7 +24,7 @@
         <?php } ?>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" action="/admin/users/<?php echo htmlspecialchars( $user["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post" enctype = "multipart/form-data"
+        <form role="form" name="atualizar_usuario" action="/admin/users/<?php echo htmlspecialchars( $user["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post" enctype = "multipart/form-data"
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
               <label for="desphoto">Foto Atual</label>
-               <img src="<?php echo htmlspecialchars( $user["desphoto"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+               <img src="<?php echo htmlspecialchars( $user["desphoto"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" style="height:64px;">
             </div>   
             <div class="form-group">
               <label for="desphoto1">Nova Foto</label>
@@ -58,8 +58,26 @@
           </div>
           <!-- /.box-body -->
           <div class="box-footer">
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" onclick="checkFields();" class="btn btn-primary">Atualizar</button>
           </div>
+          <script>
+                function checkFields(){
+                  if (document.getElementById("desperson").value.trim()=='')  {
+                      alert('Preencha o nome do usuário');
+                      return false;
+                  }
+                  if (document.getElementById("deslogin").value.trim()=='')  {
+                      alert('Preencha o login do usuário');
+                      return false;
+                  }
+                  if (document.getElementById("desemail").value.trim()=='')  {
+                      alert('Preencha o e-mail do usuário');
+                      return false;
+                  }
+                  document.atualizar_usuario.submit();
+                }
+          </script>  
+
         </form>
       </div>
   	</div>
