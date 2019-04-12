@@ -113,8 +113,8 @@ $app->get("/admin/users/create",function() {
 
   $page->setTpl("users-create", [
       "msgError"=>User::getError(),
-      "msgSuccess"=>User::getSuccess(),
-      "user"=>$user->getValues()  
+      "msgSuccess"=>User::getSuccess()
+
   ]);
 
 });
@@ -149,7 +149,9 @@ $app->get("/admin/users/:iduser",function($iduser) {
   $page = new PageAdmin();
 
   $page->setTpl("users-update", array(
-    "user"=>$user->getValues()  
+    "user"=>$user->getValues(),
+    "msgError"=>User::getError(),
+    "msgSuccess"=>User::getSuccess()  
   ));
 
 });
@@ -163,6 +165,19 @@ $app->post("/admin/users/create", function(){
   $file = $_FILES["file-upload"];
   
 
+
+  foreach ( $_POST as $chave => $valor ) {
+
+    $chave = trim( strip_tags( $valor ) );
+
+    if ( empty ( $chave ) ) {
+         User::setError("Preencha todos os campos.");
+         header('Location: /admin/users/create');
+         exit;
+    }
+  }
+
+
   if (!isset($_POST['desperson']) || $_POST['desperson'] === ''){
 
       User::setError("Preencha o nome.");
@@ -172,29 +187,36 @@ $app->post("/admin/users/create", function(){
    }
 
     $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
+
+   if ($file['error'] !== 4){ 
   
- if ($file["error"]) {
+       if ($file["error"]) {
 
-       User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
-       header('Location: /admin/users/create');
-       exit;
-  }
-  $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
+           User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
+           header('Location: /admin/users/create');
+           exit;
+       }
+        $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
 
-  if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
+      if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
 
-       User::setError("Erro no carregamento da foto, tente novamente");
-       header('Location: /admin/users/create');
-       exit;
-    }
-
+           User::setError("Erro no carregamento da foto, tente novamente");
+           header('Location: /admin/users/create');
+           exit;
+        }
+   }
 
   $user->setData($_POST);
   
 
   $user->save();
 
-  rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
+   if ($file['error'] !== 4){  
+
+             rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
+   }     
+
+ User::setSuccess("Usuário criado com sucesso");     
 
   header("Location: /admin/users/create");
 
@@ -212,29 +234,44 @@ $app->post("/admin/users/:iduser", function($iduser){
 
   $user->get((int)$iduser);
 
-  
+  foreach ( $_POST as $chave => $valor ) {
 
-  if ($file["error"]) {
+    $chave = trim( strip_tags( $valor ) );
+ 
+    if ( empty ( $chave ) ) {
 
-       User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
-       header('Location: /admin/users/create');
-       exit;
-  }
-  $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
-
-  if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
-
-       User::setError("Erro no carregamento da foto, tente novamente");
-       header('Location: /admin/users/create');
-       exit;
+         User::setError("Preencha todos os campos.");
+         header('Location: /admin/users/'.$iduser);
+         exit;
     }
+  }
 
+ if ($file['error'] !== 4){ 
+          if ($file["error"]) {
+
+               User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
+               header('Location: /admin/users/'.$iduser);
+               exit;
+          }
+          $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
+
+          if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
+
+               User::setError("Erro no carregamento da foto, tente novamente");
+               header('Location: /admin/users/'.$iduser);
+               exit;
+            }
+    } 
 
   $user->setData($_POST);
 
   $user->update();
   
-  rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
+ if ($file['error'] !== 4){ 
+
+    rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
+
+ }   
 
   header("Location: /admin/users");
 

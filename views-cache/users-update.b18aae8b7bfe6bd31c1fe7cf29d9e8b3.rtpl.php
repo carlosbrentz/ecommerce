@@ -16,6 +16,12 @@
         <div class="box-header with-border">
           <h3 class="box-title">Editar Usuário</h3>
         </div>
+        <?php if( $msgError != '' ){ ?>
+        <div class="alert alert-danger alert-dismissible" style="margin:10px">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p><?php echo htmlspecialchars( $msgError, ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
+        </div>
+        <?php } ?>
         <!-- /.box-header -->
         <!-- form start -->
         <form role="form" action="/admin/users/<?php echo htmlspecialchars( $user["iduser"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" method="post" enctype = "multipart/form-data"
