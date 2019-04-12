@@ -34,7 +34,7 @@
 
                $user = User::getFromSession(); 
 
-               $data['iduser']  =$user->getiduser();
+               $data['iduser']  = $user->getiduser();
 
              }
  

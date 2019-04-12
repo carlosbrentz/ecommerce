@@ -59,7 +59,7 @@ if (!isset($_POST['despassword-confirm']) || $_POST['despassword-confirm'] === '
 
      User::setSuccess("Senha alterada com sucesso.");
      header('Location: /admin/users/'.$iduser.'/password');
-      exit;
+     exit;
 
 });
 
@@ -109,7 +109,13 @@ $app->get("/admin/users/create",function() {
 
   $page = new PageAdmin();
 
-  $page->setTpl("users-create");
+  $user = new User();
+
+  $page->setTpl("users-create", [
+      "msgError"=>User::getError(),
+      "msgSuccess"=>User::getSuccess(),
+      "user"=>$user->getValues()  
+  ]);
 
 });
 
@@ -139,6 +145,7 @@ $app->get("/admin/users/:iduser",function($iduser) {
 
   $user->get((int)$iduser);
 
+  
   $page = new PageAdmin();
 
   $page->setTpl("users-update", array(
@@ -153,18 +160,43 @@ $app->post("/admin/users/create", function(){
 
   $user = new User();
 
-  $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
+  $file = $_FILES["file-upload"];
+  
 
-  /*$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+  if (!isset($_POST['desperson']) || $_POST['desperson'] === ''){
 
- 		"cost"=>12
-  ]); 		*/
+      User::setError("Preencha o nome.");
+      header('Location: /admin/users/create');
+      exit;
+
+   }
+
+    $_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
+  
+ if ($file["error"]) {
+
+       User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
+       header('Location: /admin/users/create');
+       exit;
+  }
+  $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
+
+  if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
+
+       User::setError("Erro no carregamento da foto, tente novamente");
+       header('Location: /admin/users/create');
+       exit;
+    }
+
 
   $user->setData($_POST);
+  
 
   $user->save();
 
-  header("Location: /admin/users");
+  rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
+
+  header("Location: /admin/users/create");
 
   exit;
 
@@ -176,11 +208,33 @@ $app->post("/admin/users/:iduser", function($iduser){
 
   $user = new User();
 
+  $file = $_FILES["file-upload"];
+
   $user->get((int)$iduser);
+
+  
+
+  if ($file["error"]) {
+
+       User::setError("Erro no arquivo de foto. Error: ".$file["error"]);
+       header('Location: /admin/users/create');
+       exit;
+  }
+  $dirUploads =  $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "res" . DIRECTORY_SEPARATOR . "admin" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR . "img" . DIRECTORY_SEPARATOR;
+
+  if (!move_uploaded_file($file["tmp_name"], $dirUploads. $file["name"])){
+
+       User::setError("Erro no carregamento da foto, tente novamente");
+       header('Location: /admin/users/create');
+       exit;
+    }
+
 
   $user->setData($_POST);
 
   $user->update();
+  
+  rename($dirUploads. $file["name"], $dirUploads.$user->getiduser().".jpg");
 
   header("Location: /admin/users");
 

@@ -165,6 +165,41 @@ public function get($iduser)
 	 $this->setData($data);
 }
 
+
+public function checkPhoto()
+       {
+
+           if (file_exists(
+            $_SERVER['DOCUMENT_ROOT']. DIRECTORY_SEPARATOR .
+            "res"  . DIRECTORY_SEPARATOR .
+            "admin" . DIRECTORY_SEPARATOR .
+            "dist"  . DIRECTORY_SEPARATOR .
+            "img"  . DIRECTORY_SEPARATOR . 
+            $this->getiduser(). ".jpg"
+           )){
+
+            $url =  "/res/admin/dist/img/" . $this->getiduser() . ".jpg";
+
+           }else{
+
+             $url =  "/res/admin/dist/img/boxed-bg.jpg";
+
+           }
+           return $this->setdesphoto($url);
+
+       }
+
+public function getValues()
+    {
+
+         $this->checkPhoto();
+
+         $values = parent::getValues();
+
+         return $values;
+
+
+    }
 public function update($encryptPassword  = 0)
 
 {

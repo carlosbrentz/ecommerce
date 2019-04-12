@@ -160,7 +160,19 @@ $app->get("/checkout", function(){
    User::verifyLogin(false);
 
    $address = new Address();
+
    $cart = Cart::getFromSession();
+
+
+   
+   if ($cart->getvlfreight() === "0.00"){
+
+      Cart::setMsgError("Calcule o Frete antes de finalizar a compra.");
+
+     header('Location: /cart');
+     exit;
+
+   } 
 
 
    IF (isset($_GET['zipcode'])) {
@@ -375,7 +387,7 @@ $app->post("/login", function(){
        User::setError($e->getMessage());
     }
 
-    header("Location: /checkout");
+    header("Location: /");
 
     exit;
 

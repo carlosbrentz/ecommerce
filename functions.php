@@ -33,6 +33,23 @@ function getUserName()
 	 return $user->getdesperson();
 }
 
+function getUserPhoto()
+{
+
+	 $user = User::getFromSession();
+  
+	 return $user->getdesphoto();
+}
+
+function getUserMemberSince()
+{
+     
+	 $user = User::getFromSession();
+  
+     $dataSince = date('F', strtotime($user->getdtregister())).' de '.date('Y', strtotime($user->getdtregister()));
+
+	 return $dataSince;
+}
 
 function getCartNrQtd()
 {

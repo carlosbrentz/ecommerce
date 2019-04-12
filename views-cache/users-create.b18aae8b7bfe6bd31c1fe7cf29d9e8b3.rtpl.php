@@ -21,13 +21,25 @@
         <div class="box-header with-border">
           <h3 class="box-title">Novo Usuário</h3>
         </div>
+         <?php if( $msgError != '' ){ ?>
+        <div class="alert alert-danger alert-dismissible" style="margin:10px">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p><?php echo htmlspecialchars( $msgError, ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
+        </div>
+        <?php } ?>
+        <?php if( $msgSuccess != '' ){ ?>
+        <div class="alert alert-success alert-dismissible" style="margin:10px">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p><?php echo htmlspecialchars( $msgSuccess, ENT_COMPAT, 'UTF-8', FALSE ); ?></p>
+        </div>
+        <?php } ?>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" action="/admin/users/create" method="post">
+        <form role="form" action="/admin/users/create" method="post" enctype = "multipart/form-data">
           <div class="box-body">
             <div class="form-group">
               <label for="desperson">Nome</label>
-              <input type="text" class="form-control" id="desperson" name="desperson" placeholder="Digite o nome">
+              <input type="text" class="form-control" id="desperson" name="desperson" placeholder="Digite o nome" value="">
             </div>
             <div class="form-group">
               <label for="deslogin">Login</label>
@@ -49,6 +61,10 @@
               <label>
                 <input type="checkbox" name="inadmin" value="1"> Acesso de Administrador
               </label>
+            </div>
+            <div class="form-group">
+              <label for="desphoto">Foto</label>
+              <input type="file" accept="image/jpeg" name="file-upload" >
             </div>
           </div>
           <!-- /.box-body -->

@@ -9,10 +9,13 @@ $app->get('/admin', function() {
 
 	User::verifyLogin();
     
+    $user = new User();
+
+    $user = User::getFromSession();  
+
 	$page = new PageAdmin();
 
 	$page->setTpl("index");
-
 
 });
 
